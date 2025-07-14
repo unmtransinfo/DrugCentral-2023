@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Drug Central - Similarity Search{% endblock %}
+
+{% block main %}
+
+{% include 'similaritysearch.html' %}
+
+{% if s %}
+{% if error %}
+<p>Error: {{ error }}</p>
+<p></p>
+{% else %}
+<p>Drug results: {{ result_count }} </p>
+{% if result_count %}
+<table style="margin-bottom: 30px;">
+{% for drug in results %}
+<tr>
+<td id="nobr3" style="color: dodgerblue">
+<a href="{% url 'drugcard-view' drug.id %}?s={{ s|urlencode }}">
+<strong class="sealine">{{drug.name}}</strong>
+</a></td>
+<td id="sea">{{ drug.mrdef|default_if_none:'' }}</td>
+<td>
+{% if drug.molimg %}
+<a href="{% url 'drug-image' drug.id %}"><img id="sea2" src="{% url 'drug-image' drug.id %}" /></a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

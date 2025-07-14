@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="viewport" content="width=device-width, initial-scale=.8, maximum-scale=1">
+     <meta name="format-detection" content="telephone=no"/>
+    <meta name="description"
+          content="DrugCentral is online drug information resource created and maintained by Division of Translational Informatics at University of New Mexico."/>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Links -->
+    <link rel="stylesheet" href="/static/css/search.css">
+    <link rel="stylesheet" href="/static/css/jquery.dataTables.min.css">
+    <!--JS-->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.dataTables.min.js"></script>
+    <script src="/static/js/jquery.rd-navbar.js"></script>
+    <script src="/static/js/tmstickup.js"></script>
+    <script src='/static/js/device.min.js'></script>
+
+<script>
+$(document).ready(function(){
+  // Stick up menu
+  $('#stuck_container').TMStickUp({})
+
+  // Add smooth scrolling to all links
+  $("a").on('click', function(event) {
+
+    // Make sure this.hash has a value before overriding default behavior
+    //if (this.hash !== "") {
+    if (this.href[0] === "#") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (800) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 800, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+});
+</script>
+<meta name="msvalidate.01" content="3F52A17DC2B652A499E0E983E7895672" />
+<meta name="google-site-verification" content="cH5JKb6S04-4d4Ba5pGx1GSjXpmchZHQrZ5MIiTl910" />
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90288404-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+    
+
+</head>
+<body>
+    <header>
+        <div id="stuck_container" class="stuck_container">
+            <nav class="navbar navbar-default navbar-static-top clearfix">
+                <div class="container1">
+                    <div class="navbar-header">
+                        <h1 class="navbar-brand">
+                            <a style="color: white" href="{% url 'root-view' %}">DrugCentral 2023    🐕  </a>
+                            <span class="brand-slogan">2022 Update-Veterinary Drugs & Uses </span>
+
+                        </h1>
+
+                    </div>
+                    
+
+                    <div class="navbar-right">
+                        <ul class="navbar-nav sf-menu" data-type="navbar">
+                            <li style="color: black">
+                                <a href="{% url 'root-view' %}">Search</a>
+                            </li>
+
+<li style="color: black">
+                            <a href="{% url 'substructure-view' %}">Structure 🔎</a>
+                            </li>
+                             <li style="color: black">
+                            <a href="{% url 'similarity-view' %}">Similarity 🔎</a>
+                            </li>
+ <li style="color: black">
+                            <a href="{% url 'OpenAPI' %}">Smart API</a>
+                            </li>
+                             <li style="color: black">
+                            <a href="{% url 'Redial' %}">Redial</a>
+                            </li>
+                            <li style="color: black">
+                                <a href="{% url 'about' %}">About</a>
+                            </li>
+                            <!-- <li>
+                                <a href="#">Our Search </a>
+                            </li>-->
+                            <li class="dropdown" style="color: black">
+                                <a href="{% url 'download' %}">Download </a>
+                            </li>
+                              <li style="color: black">
+                            <a href="{% url 'LINCS' %}">L1000</a>
+                            </li>
+
+                            <li style="color: black">
+                                <a href="{% url 'help' %}">FAQ</a>
+                            </li>
+                                  
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+
+    </header><a href="#" class="scrollup">Scroll</a>
+
+<div class="content container">
+    <!--<h1>database updated</h1>-->
+{% block main %}{% endblock %}
+</div>
+
+{% block overview %}
+   <section class="well5 bg-alt">
+            <div class="container" style="padding: 5px">
+                 <div style="margin-left: 10px">
+
+            </div><br>
+                <h3 class="text-center">Featured <strong> News</strong></h3>
+                <h2 class="text-center" style="letter-spacing: 4px"> <a href="https://doi.org/10.1093/nar/gkac1085" title="Drugcentral 2023 NAR Paper" target="_blank">Drugcentral 2023 NAR Article</a><br><br>
+                    <a href="https://pubs.acs.org/page/vi/chemistry_coronavirus_research?utm_source=pubs_content_marketing&utm_medium=email&utm_campaign=PUBS_0621_FMT_Coronavirus_Email_30&src=PUBS_0621_FMT_Coronavirus_Email_30&ref=pubs_content_marketing_email_PUBS_0621_FMT_Coronavirus_Email_30&" title="ACS Matters Coronavirus Research" target="_blank">The Latest in Chemistry in Coronavirus Research</a></h2>
+                 <br><h3 class="text-center">Drugs <strong> in the News</strong></h3>
+
+                <h2 class="text-center" style="letter-spacing: 4px"><br>
+                    <a href="/drugcard/4189?q=makena" title="makena" target="_self">Makena</a>
+                      <a href="/drugcard/5133?q=venetoclax" title="venetoclax" target="_self">Venetoclax</a>
+                <a href="/drugcard/4304?q=dapagliflozin" title="dapagliflozin" target="_self">Dapagliflozin</a>
+                <a href="/drugcard/4924?q=KEYTRUDA" title="KEYTRUDA" target="_self">KEYTRUDA</a>
+                     <a href="/drugcard/5012?q=sacubitril" title="sacubitril%20" target="_self">Sacubitril</a>
+                    <a href="/drugcard/5302?q=%20LORBRENA" title="LORBRENA" target="_self">LORBRENA</a>
+
+                <a href="/drugcard/1395?q=Hydroxychloroquine%20" title="Hydroxychloroquine" target="_self">Hydroxychloroquine</a>
+                 </h2>
+
+
+
+
+                <br>
+
+
+                <h3 class="text-center">DrugCentral <strong> Search Overview</strong></h3>
+
+                <ul class="">
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+                        <h4 class="fw-n txt-sec">  <strong>Drug search example:</strong></h4>
+
+                        <p><h4 class="txt-sec">Generic drug names, drug synonyms, trade names terms can be used to search for drugs.
+                          Example search for <strong style="color:#e2cb31"> Lipitor </strong> can query using either <strong style="color:#e2cb31"> “Atorvastatin” or “Lipitor”.</strong>A comprehensive list of drug development codes and salt or ester forms
+                      are also stored in the database and can be used as search terms, for example search for <strong style="color:#e2cb31">"rosuvastatin"</strong> the following terms can be used:<strong style="color:#e2cb31"> "rosuvastatin calcium"</strong> or <strong style="color:#e2cb31">"ZD4522".</strong></p></h4>
+
+
+<p><h4 style="text-align: center;margin-right: 50px "><img
+                            src="static/images/oleglogo.png"></h4><h4 class="fw-n txt-sec" ><strong>Disease search example:</strong></h4>
+                       <h4 class="fw-n txt-sec">Supported disease terms are <a style="color: #e2cb31"
+                                                                               href="http://www.ihtsdo.org/snomed-ct">SNOMED-CT</a> and <a style="color: #e2cb31" href="http://omop.org/Vocabularies">OMOP vocabulary</a> terms. Disease annotations for drugs approved before 2012 <strong style="color:black"> originate from OMOP vocabulary mappings.</strong> For drugs approved after 2012 <strong>disease annotations are extracted manually </strong>from approved drug labels and mapped to SNOMED-CT concepts.</h4> </p>
+<p> <h4 class="fw-n txt-sec">Example search for<strong style="color:#e2cb31"> &ldquo;Chronic Hepatitis
+                                                       C&rdquo;</strong>
+                        returns the list of antiviral
+                                                    drugs
+    indicated to treat<strong style="color:#e2cb31"> &ldquo;Chronic Hepatitis C&rdquo;</strong> followed by drugs
+                            <strong style="color:#e2cb31">contra-indicated in hepatitis C.</strong></h4>
+                        <p><h4 style="text-align: center;margin-right: 50px "><img
+                            src="static/images/oleglogo.png"></h4><h4 class="fw-n txt-sec" ><strong style="color: #e2cb31">New! </strong><strong>Medical (off label) uses suggestion form</strong></h4><center><a href="https://forms.gle/JBNbKmnrPtKr6fTW6" target="_blank">Off label Uses Form</a> </center></p>
+
+                    </li>
+
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+                        <h4 class="fw-n txt-sec"><strong style="color: #e2cb31">New!</strong> <strong> Substructure Search:</strong><br> The current update supports chemical substructure searching. Typing a SMILES string in the DrugCentral Substructure search bar launches a chemical substructure search that finds matching compounds in DrugCentral. E.g., <a href="/substructure?m=n1cnccc1">N1cnccc1 </a>. SMILES strings can be located on all Drug Cards under "Description". <br>
+                            <br><strong style="color: #e2cb31">New!</strong> <strong> FDA Adverse Event Reporting System:</strong><br> The 2021 DrugCentral update, we separately calculated FAERS for men and women to enable research on sex differences in drug safety. The <strong>2022 version</strong> goes further by computing adverse drug event scores granulated by age: pediatric data (FAERS_PED) covers patients from 1 day to 17 years, and geriatric data (FAERS_GER) focuses on elderly patients over 65 years of age, respectively.
+ Female, Male, Geriatric & Pediatrics. E.g., <a href="/drugcard/195?q=adderall#FAER">amfetamine </a>
+</h4>
+<br><br>   <h4 class="fw-n txt-sec"><strong style="color: #e2cb31">New!</strong> <strong> Target Cards:</strong> <br> To perform a target card search enter a Uniprot target Accession ID e.g., <a href="/target/P23975/view?q=P23975">P23975</a>. The target cards depict the "Accession", "Swissprot", "Organism", "Gene" & "Target class" followed by "Drug relations" where the drugs "Bioactivity mechanism-of-actions" are identified.
+
+</h4>
+
+                            <h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+                        <h4 class="fw-n txt-sec"><strong>Target search example:</strong>
+</h4><h4 class="fw-n txt-sec">Supported target search terms are HUGO gene symbols, Uniprot accessions and target names, and Swissprot identifiers.
+                      Example search for drugs targeting Mu-type opioid receptor can be run using either of the
+                        terms:<strong style="color:red"> “OPRM1”, P35372, “OPRM_HUMAN”,</strong> full or partial
+                        Uniprot target name. Returned drugs are ranked using the following criteria: top ranked drugs have mechanism of action target Mu-type opioid receptor, next in the list are drugs with potencies measured against this receptor.
+ <br>
+
+
+                            <br><br> In collaboration with the<strong> IDG</strong>
+                  <a href="https://druggablegenome.net/" target="_blank">
+                    <img src="static/images/IDGLink.png" width="95%">
+                 </a></h3></h4>
+
+
+                    </li>
+
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogoD.png"></h4>
+                        <h4 class="fw-n txt-sec"> <strong style="color: #e2cb31">New!</strong> <strong> Veterinary Drugs, Uses & Products:</strong> </h4>
+
+
+<h4 class="txt-sec"> Drug Central now contains <strong>Veterinary Drugs, Uses & Products. </strong>The current update adds 1805 bioactivities for 226 veterinary drugs and 804 targets. DrugCentral veterinary data contains application numbers and types, trade names, applicant names, and prescription types for 1492 drug products as referenced in FDA’s Green Book.  DrugCentral currently holds 1664 indications (pairs of drug and concept names) for 34 species. Dogs, cattle, and cats sum up to 63% of the indications covered by 193 veterinary drugs.
+
+    <strong>Veterinary Drug Use</strong> can be found on each drug card by selecting the sub menu link:<span style="font-size: 27px;"> 🐶</span><strong style="color:#38a99c;"> Veterinary Use on the drug card. </strong>E.g., <a href="/drugcard/5532?q=enrofloxacin">enrofloxacin </a> </h4>
+<p dir="ltr"> </p>
+                        <p dir="ltr"> </p></li>
+
+
+                                   <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+                        <h4 class="fw-n txt-sec" ><strong>Pharmacologic action search example:</strong></h4>
+
+
+<h4 class="txt-sec">Supported pharmacologic action terms are <a style="color: #38a99c" href="https://www.nlm.nih.gov/mesh/MBrowser.html">MeSH</a>, <a style="color:#38a99c" href="http://www.fda.gov/ForIndustry/DataStandards/StructuredProductLabeling/ucm162549.htm">FDA [EPC, MoA, PE]</a>, <a style="color: #38a99c" href="https://www.ebi.ac.uk/chebi/">ChEBI</a> action roles.</h4>
+<h4 class="txt-sec">Example search for <strong style="color:#38a99c">  &ldquo;HMG-CoA Reductase Inhibitor&rdquo;</strong> FDA EPC term for statin drugs returns list of all statin drugs classified by FDA as HMG-CoA reductase inhibitors.</h4>
+<p dir="ltr"> </p>
+<p dir="ltr"> </p>
+                        <h4 style="text-align: center;margin-right: 50px "><img
+                            src="static/images/oleglogo.png"></h4>
+<h4 class="txt-sec">Ranked result list is annotated with <strong style="color:#38a99c"> 4 level ranking system </strong>ordered from highest to lowest:</h4>
+<h4 class="txt-sec"><strong style="color:#38a99c">A - query term</strong> matched drug name or synonyms, mechanism of action target, or drug indication.</h4>
+<h4 class="txt-sec"><strong style="color:#38a99c">B - query term </strong>matched disease term in drug contraindications or off-label uses, targets listed in drug bioactivity profiles (not MoA targets), or pharmacologic action descriptions.</h4>
+<h4 class="txt-sec"><strong style="color:#38a99c">C - query term </strong> matched short drug description text.</h4>
+<h4 class="txt-sec"><strong style="color:#38a99c">D - query term </strong> matched full text in FDA drug labels. </h4>
+
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+{% block footer %}
+<div class="container">
+<p class="copyright">
+<a href="https://doi.org/10.1093/nar/gkac1085" target="_blank">Citing DrugCentral</a> &#169; <span id="copyright-year">{% now "Y" %}</span>.
+<a href="{% url 'privacy' %}">License</a>
+<img style="vertical-align:middle;margin:auto;top:0;left:340px;right:0;bottom:0;" src="static/images/mobile.png" />
+</p>
+</div>
+{% endblock %}
+
+</div>
+{% endblock %}
+
+<script type="text/javascript">$(document).ready(function () {
+
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.scrollup').fadeIn();
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+
+    $('.scrollup').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
+
+});</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Drug Central - SMART API{% endblock %}
+
+{% block overview %}
+<section class="well5 bg-alt">
+            <div class="container" style="padding: 10px">
+                <h3 class="text-center"><strong>SMART API </strong></h3>
+                <h3 class="text-center"></h3><br>
+
+    <iframe src="https://pharos-api.newdrugtargets.org/#/default/get_drugcentral" title="" width="100%" height="600" style="border:none; scrolling="no">
+  <p>Your browser does not support iframes.</p>
+</iframe>
+
+     <section class="well5 bg-alt">
+            <div class="container" style="padding: 5px">
+                 <div style="margin-left: 10px">
+
+            </div><br>
+                <h3 class="text-center">Featured <strong> News</strong></h3>
+                <h2 class="text-center" style="letter-spacing: 4px"><br>
+                    <a href="https://pubs.acs.org/page/vi/chemistry_coronavirus_research?utm_source=pubs_content_marketing&utm_medium=email&utm_campaign=PUBS_0621_FMT_Coronavirus_Email_30&src=PUBS_0621_FMT_Coronavirus_Email_30&ref=pubs_content_marketing_email_PUBS_0621_FMT_Coronavirus_Email_30&" title="ACS Matters Coronavirus Research" target="_blank">The Latest in Chemistry in Coronavirus Research</a></h2>
+                 <br><h3 class="text-center">Drugs <strong> in the News</strong></h3>
+
+                <h2 class="text-center" style="letter-spacing: 4px"><br>
+                      <a href="/drugcard/5133?q=venetoclax" title="venetoclax" target="_self">Venetoclax</a>
+                <a href="/drugcard/4304?q=dapagliflozin" title="dapagliflozin" target="_self">Dapagliflozin</a>
+                <a href="/drugcard/4924?q=KEYTRUDA" title="KEYTRUDA" target="_self">KEYTRUDA</a>
+                     <a href="/drugcard/5012?q=sacubitril" title="sacubitril%20" target="_self">Sacubitril</a>
+                    <a href="/drugcard/5302?q=%20LORBRENA" title="LORBRENA" target="_self">LORBRENA</a>
+
+                <a href="/drugcard/1395?q=Hydroxychloroquine%20" title="Hydroxychloroquine" target="_self">Hydroxychloroquine</a>
+                 </h2>
+
+
+        </section>
+
+{% block footer %}
+<div class="container">
+<p class="copyright">
+<a href="https://www.nature.com/articles/s42256-021-00335-w" target="_blank">Citing Redial. May, 03 2021</a>
+<a href="{% url 'privacy' %}">License</a>
+<img style="vertical-align:middle;margin:auto;top:0;left:340px;right:0;bottom:0;" src="static/images/mobile.png" />
+</p>
+</div>
+{% endblock %}
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90288404-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+{% endblock %}

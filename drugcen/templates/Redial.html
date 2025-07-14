@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Drug Central - REDIAL{% endblock %}
+
+{% block overview %}
+<section class="well5 bg-alt">
+            <div class="container" style="padding: 10px">
+                <h3 class="text-center"><strong>Redial </strong></h3>
+                <h3 class="text-center"></h3><br>
+
+    <iframe src= "/TestRedial2020" title="" width="100%" height="300" style="border:none; scrolling="no">
+  <p>Your browser does not support iframes.</p>
+</iframe>
+
+    <h3 style="text-align:
+                center;font-size: 30px;margin-bottom: 5px"> </h3>
+                <ul>
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align:center; margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4><h4 style="text-align: center;margin-right: 35px "><strong style="color: black">Redial 2020 WorkFlow</strong><img
+                            src="static/images/webportal.png" width="110%"></h4>
+
+                        <h4 class="txt-sec"><strong>Summary of Results (Activity Models)</strong><img
+                              src="static/images/RedialAbout7.gif" width="90%"></h4>
+<img
+                              src="static/images/RedialAbout8.gif" width="90%">
+                    </li>
+
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+
+                        <h4 style="text-align: center;margin-right: 35px "><h4><strong style="color: black">Five filters applied, before building  predictive models</strong></h4>
+
+                     <h4 style="color: black"> <p>
+                                              <strong>1)</strong> SMILES were converted into canonical SMILES. Some of the SMILES were not converted into Canonical SMILES, thus discarded.
+                                            </p>
+                                            <p>
+                                             <strong>2)</strong> RDKit Salt Stripper was implemented to obtain the salt stripped molecules. The 'donotRemoveEverything' feature helps by leaving the last salt when the entire Canonical SMILE contains only the salts.
+                                            </p>
+                                            <p>
+                                                <strong>3)</strong> The RDKit 'Uncharger' feature uncharges molecules by adding or removing hydrogens.
+                                            </p>
+                                            <p>
+                                                <strong>4)</strong> The Uncharged SMILES was converted to a standardized tautomer.
+
+                                            </p>
+                                            <p>
+                                                <strong>5)</strong> logP and logS filters were implemented.<br> <br>
+                                            </p>
+
+                     </h4>
+
+                        <h4><strong style="color: black">Interpreting the Results <br>Live Virus Infectivity</strong></h4>
+<h4 style="color: black">
+The SARS-CoV-2 cytopathic effect (CPE) assay measures the ability of a compound to
+    reverse the cytopathic effect induced by the virus in Vero E6 host cells. As cell viability is
+    reduced by a viral infection, the CPE assay measures the compound’s ability to restore cell function
+    (cytoprotection). While this assay does not provide any information concerning the mechanism of action,
+    it can be used to screen for antiviral activity in a high-throughput manner. However, there is the possibility
+    that the compound itself may exhibit a certain degree of cytotoxicity, which could also reduce cell viability.
+    Since this confounds the interpretation of CPE assay results, masking the cyto-protective activity, a counter-screen
+    to measure Vero E6 host cells' cytotoxicity is used to detect such compounds. Thus, a net, positive result from the
+    combined CPE assays consist of a compound showing a protective effect but no cytotoxicity.
+<br></p>
+</h4><h4><strong style="color: black">Viral Entry Assays</strong></h4>
+<h4 style="color: black"> The Spike-ACE2 protein-protein interaction (AlphaLISA) assay measures a compound's ability to disrupt the
+    interaction between the viral Spike protein and its human receptor protein, ACE2 (angiotensin-converting enzyme type 2). The surface of the ACE2 protein is the primary host factor recognized and targeted by SARS-CoV-2 virions. This binding event between the SARS-CoV-2 Spike protein and the host ACE2 protein initiates binding of the viral capsid and leads to viral entry into host cells. Thus, disrupting the Spike-ACE2 interaction is likely to reduce the ability of SARS-CoV-2 virions to infect host cells. This assay has two counterscreens, as follows. The TruHit counter screen is used to determine false positives, i.e., compounds that interfere with the AlphaLISA readout in a non-specific manner, or with assay signal generation and/or detection. It uses the biotin-streptavidin interaction (one of the strongest known non-covalent drug-protein interactions) because other compounds are unlikely to disturb it. Consequently, any compound showing interference with this interaction is most likely a false positive. Common interfering agents are oxygen scavengers or molecules with spectral properties sensitive to the 600-700 nm wavelengths used in AlphaLISA. The second counterscreen is an enzymatic assay that measures human ACE2 inhibition to identify compounds that could potentially disrupt endogenous enzyme function. ACE2 lowers blood pressure by catalyzing the hydrolysis of angiotensin II (a vasoconstrictor peptide) into the vasodilator angiotensin (1-7). While blocking the Spike-ACE2 interaction may stop viral entry, drugs effective in this manner could cause unwanted side-effects by blocking the endogenous vasodilating function of ACE2. Thus, the ACE2 assay serves to detect such eventualities and to de-risk such off-target events.
+
+    </p></h4>
+    </h4><h4 style="color: black"><strong>Viral Replication</strong></h4>
+                            <h4 style="color: black"> Following entry into the host cell, the main SARS-CoV-2 replication enzyme is 3C-like proteinase (3CL) (also called “main protease” or Mpro) cleaves the two SARS-CoV-2 polyproteins into various proteins that are essential to the viral life cycle (RNA polymerases, helicases, methyltransferases, etc). The inhibition of the 3CL protein causes the disruption of the viral replication process. Hence, 3CL is an attractive drug target. The SARS-CoV-2 3CL biochemical assay simply measures the compound's ability to inhibit recombinant 3CL cleavage of a fluorescently labeled peptide substrate.
+                            </h4>
+                    <h4 style="color: black"><strong>In vitro Infectivity</strong></h4>
+
+
+                  <h4 style="color: black">  In this category there are four assays. The SARS-CoV pseudotyped particle entry (and its counter screen) and the MERS-CoV pseudotyped particle entry (and its counter screen). The pseudotyped particle assay measures the inhibition of viral entry in cells but it does not require a BSL-3 facility (BSL-2 is sufficient) to be performed, as it does not use a live virus to infect cells. Instead, it uses pseudotyped particles that are generated by the fusion of the coronavirus spike protein with a murine leukemia virus core. Since they have the coronavirus spike protein on their surface, the particles behave like their native coronavirus counterparts for entry steps. This makes them excellent surrogates of native virions for studying viral entry into host cells. The cell lines used are Vero E6 for SARS-CoV and Huh7 for MERS-CoV.
+                  </h4>
+
+                    <h4 style="color: black"><strong>Human Cell Toxicity</strong></h4>
+                        <h4 style="color: black">With the human fibroblast toxicity assay, it is possible to assess the general human cell toxicity of compounds by measuring host cell ATP content as a readout for cytotoxicity (similarly to what is done in the various counter screenings). Therefore, this assay is intended for discarding compounds that are likely to show high toxicity in human cells (i.e. side effects in the organism). Hh-WT fibroblast cells are used in this assay and the highly cytotoxic drug bortezomib is used as a reference compound. </h4>
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4>
+
+
+                        <h4 style="text-align: center;margin-right: 35px "><strong style="color: black;text-align: center"> About the Consensus Results</strong></h4>
+                                          </a>
+                                              <h4 style="color: black">
+                                                Consensus results were obtained using the prediction of three different models for each activity and toxicity models.
+                                                The output is predicted based on the voting by three models. The output predicted by all three or any two
+                                                is considered as a predicted label.
+                                              </h4>
+
+                    <h4 style="color: black; text-align:center"><strong>
+rdkDes = RDKit Descriptors<br>
+tpatf = Topological Pharmacophore Atomic Triplet Fingerprints</strong></h4>
+
+
+
+                    <li class="col-md-4 col-sm-4 col-xs-4"><h4 style="text-align: center;margin-right: 35px "><img
+                            src="static/images/oleglogo.png"></h4><h4 style="text-align: center;margin-right: 35px "><strong style="color: black">Contact US</strong></h4>
+                        <h4 style="text-align: left; color:black"><strong style="color:black">Dr. Tudor Oprea</strong>, Professor,
+Division of Translational Informatics, University of New Mexico Health Sciences Center, USA
+                        <br><br>
+                            <strong>Dr. Suman Sirimulla</strong>, Assistant Professor,
+Department of Pharmaceutical Sciences, The University of Texas at El Paso, USA<br><br>
+                            <strong style="color: black" > GitHub</strong></p></h4>
+<h4 style="text-align: left;margin-right: 35px "><img style="margin-right: 10px;margin-top: 10px"
+                            src="static/images/Git.png" align="left";>
+                           <br>
+                             <a href="https://github.com/unmtransinfo/REDIAL" target="_blank"><strong> REDIAL-2020 (UNM)</strong></a>
+                    <br><br>
+                   <!-- <strong style="color: black" >DockerHub</strong></h4>
+<h4 style="text-align: left;margin-right: 35px "><img style="margin-right: 10px;margin-top: 10px"
+                            src="static/images/dock.png" align="left";>
+                           <br>
+                             <a href="
+" target="_blank"><strong> REDIAL-2020 Docker</strong></a></h4>
+                    <br><br> -->
+                            <h4 style="color: black;text-align: left "><strong style="color: black;text-align: left" >References</strong></h4>
+<p style="color:black">
+        • <strong><a style="font-size: 10px" href="https://www.biorxiv.org/content/10.1101/2020.06.04.135046v1" target="_blank">https://www.biorxiv.org/content/</a></strong><br/>
+        • <strong><a style="font-size: 10px"href="https://opendata.ncats.nih.gov/covid19/" target="_blank">https://opendata.ncats.nih.gov/covid19/</a></strong><br/>
+        • <strong><a style="font-size: 10px"href="https://opendata.ncats.nih.gov/covid19/assay?aid=15" target="_blank">https://opendata.ncats.nih.gov/covid19/assay?aid=15</a></strong><br/>
+        • <strong><a style="font-size: 10px"href="https://opendata.ncats.nih.gov/covid19/assay?aid=14" target="_blank">https://opendata.ncats.nih.gov/covid19/assay?aid=14</a></strong><br/>
+        • <strong><a style="font-size: 10px"href="https://ochem.eu/" target="_blank">https://ochem.eu/</a></strong><br/>
+</p>
+
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+
+{% block footer %}
+<div class="container">
+<p class="copyright">
+<a href="https://www.nature.com/articles/s42256-021-00335-w" target="_blank">Citing Redial. May, 03 2021</a>
+<a href="{% url 'privacy' %}">License</a>
+<img style="vertical-align:middle;margin:auto;top:0;left:340px;right:0;bottom:0;" src="static/images/mobile.png" />
+</p>
+</div>
+{% endblock %}
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-90288404-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+{% endblock %}

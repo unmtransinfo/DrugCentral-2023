@@ -1,0 +1,85 @@
+# Use official Postgres image as base
+FROM postgres:14.17
+
+# Accept build arguments (passed via --build-arg)
+ARG POSTGRES_DB
+ARG POSTGRES_USER
+ARG POSTGRES_PASSWORD
+
+# Set environment variables for runtime (container env)
+ENV POSTGRES_DB=${POSTGRES_DB} \
+    POSTGRES_USER=${POSTGRES_USER} \
+    POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        libboost-all-dev \
+        libeigen3-dev \
+        libpq-dev \
+        postgresql-server-dev-14 \
+        libfreetype6-dev \
+        python3-dev \
+        python3-numpy \
+        git \
+        wget \
+        tar \
+        ca-certificates \
+        libjpeg-dev \
+        libpng-dev \
+        libtiff-dev \
+        zlib1g-dev \
+        libxml2-dev \
+        libexpat1-dev \
+        libffi-dev \
+        libsqlite3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Clone and build RDKit
+RUN cd /tmp && \
+    git clone https://github.com/rdkit/rdkit.git && \
+    wget https://archives.boost.io/release/1.81.0/source/boost_1_81_0.tar.gz && \
+    tar xzf boost_1_81_0.tar.gz && \
+    cd boost_1_81_0 && \
+    ./bootstrap.sh && \
+    ./b2 install
+
+# Build RDKit with PostgreSQL and custom options
+RUN cd /tmp/rdkit && mkdir build && cd build && \
+    cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DBOOST_ROOT=/usr/local \
+      -DBOOST_INCLUDEDIR=/usr/local/include \
+      -DBOOST_LIBRARYDIR=/usr/local/lib \
+      -DBoost_NO_SYSTEM_PATHS=ON \
+      -DBoost_NO_BOOST_CMAKE=ON \
+      -DPython3_EXECUTABLE=$(which python3) \
+      -DRDK_BUILD_PYTHON_WRAPPERS=OFF \
+      -DRDK_BUILD_RDRAWPYTHON=OFF \
+      -DRDK_BUILD_INCHI_SUPPORT=ON \
+      -DRDK_BUILD_AVALON_SUPPORT=ON \
+      -DRDK_BUILD_PGSQL=ON \
+      -DPostgreSQL_ROOT=/usr/lib/postgresql/14 \
+      -DPostgreSQL_INCLUDE_DIR=/usr/include/postgresql/14/server \
+      -DPostgreSQL_LIBRARY=/usr/lib/x86_64-linux-gnu/libpq.so && \
+    make -j$(nproc) && make install
+
+# Add your custom pg_hba.conf
+# Copy your custom pg_hba.conf file (optional, if you have one)
+# COPY pg_hba.conf /etc/postgresql/pg_hba.conf
+
+# Copy initialization scripts and DB dump
+COPY init/wait-for-db.sh /docker-entrypoint-initdb.d/wait-for-db.sh
+COPY init/drugcen.dump /docker-entrypoint-initdb.d/drugcen.dump
+COPY init/pg_hba.conf /etc/postgresql/pg_hba.conf
+
+# Fix permissions on dump file
+RUN chmod 644 /docker-entrypoint-initdb.d/drugcen.dump && \
+    chown postgres:postgres /docker-entrypoint-initdb.d/drugcen.dump
+
+# Copy override script that runs at container init
+RUN echo '#!/bin/bash\n\
+cp /etc/postgresql/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf\n' \
+> /docker-entrypoint-initdb.d/001-copy-pg_hba.sh && \
+chmod +x /docker-entrypoint-initdb.d/001-copy-pg_hba.sh

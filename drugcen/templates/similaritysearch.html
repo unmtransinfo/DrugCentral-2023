@@ -1,0 +1,28 @@
+<script type="text/javascript" src="/autocomplete.js"></script>
+{% if image %}
+<section class="cont-wr3">
+<div class="container text-center banner">
+<div style="display:inline-block;vertical-align:top;margin-top:5px;margin-right:30px">
+<p class="fw-b" style="color: white; font-size:20px "><a style="color: blue; cursor: pointer"
+                                                         href="{% url 'about' %}" target="_self">{{ DRUG_COUNT }}</a></p>
+<h2 class="starfont2" style="color: white">Drugs</h2>
+<p style="font-size:15px;color:white; margin-top: 25px;"><a style="color: blue; cursor: pointer" href="{% url 'about' %}">
+    {{ PHARMACEUTICAL_COUNT }}</a><br>pharmaceuticals</p>
+</div>
+<a style="vertical-align:top;" href="{% url 'drugcard-view' image.id %}">
+<img class="rotatemolecule" src="{% url 'drug-image' image.id %}" title="{{ image.name }}" />
+</a>
+<br>
+{% else %}
+<section class="cont-wr3" style="height:135px">
+<div class="container text-center banner">
+{% endif %}
+<form class="search-form" action="/similarity?" method="GET">
+<div class="autocomplete">
+<input class="search-form_input1" type="text" name="s" id="s" value="{{ s }}" placeholder="Enter: SMILES for Similarity Search"/>
+</div><span style=""> Similarity SMILES Example: <a style="color: white;" href="/similarity?s=OO"> OO </a> </span>
+<span class="search-form_liveout"></span>
+<button class="search-form_submit" type="submit"></button>
+</form>
+</div>
+</section>

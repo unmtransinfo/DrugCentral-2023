@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ target.name }}{% endblock %}
+
+{% block main %}
+
+{% include 'search.html' %}
+
+<h1 class="starfont3">{{ target.name }}</h1>
+
+<h2 class="starfont3">Description:</h2>
+<table><tr><th>Description</th></tr><tr>
+<td>
+<ul>
+<li>Accession: {{ target.accession }}</li>
+<li>Swissprot: {{ target.swissprot }}</li>
+<li>Organism: {{ target.organism }}</li>
+{% if target.gene %}
+<li>Gene: {{ target.gene }}</li>
+{% endif %}
+{% if target.target_classes %}
+<li>Target class{{ target.target_classes|pluralize:'es' }}: {{ target.target_classes|join:', ' }}</li>
+{% endif %}
+</ul>
+</td>
+</tr>
+</table>
+
+<h2 class="starfont3">Drug Relations:</h2>
+{% if target.drugs %}
+<table style="margin-bottom: 30px;">
+{% for drug in target.drugs %}
+<tr>
+<td id="nobr3" style="color: dodgerblue">
+<a href="{% url 'drugcard-view' drug.id %}">
+<strong class="sealine">{{drug.name}}</strong>
+</a>
+<br />
+
+</td>
+<td id="sea">{{ drug.mrdef|default_if_none:'' }}</td>
+<td id="sea"> <a href="{% url 'drugcard-view' drug.id %}#activity">
+<strong class="sealine">Bioactivity details</strong>
+</a>
+
+</td>
+    <td align="center"><span style="margin-left: 25px"> MOA</span><input type="checkbox" checked="checked" {% if drug.is_mao %}checked="checked"{% endif %} /><span></span></td>
+<td>
+{% if drug.molimg %}
+<a href="{% url 'drug-image' drug.id %}"><img id="sea2" src="{% url 'drug-image' drug.id %}" /></a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+
+{% endblock %}
+{% block overview %}{% endblock %}

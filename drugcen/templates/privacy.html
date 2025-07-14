@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Drug Central - Privacy{% endblock %}
+
+{% block overview %}
+<section class="well5 bg-alt">
+            <div class="container" style="padding: 10px">
+                <h3 class="text-center">DrugCentral <strong> License</strong></h3>
+                <h4 style="color: black;margin: 40px;padding: 10px;font-size: 14px;text-align: center"><strong>DrugCentral is available
+                    under <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode" target="_blank">Creative Commons
+                        license</a>,<br> download and use of this resource evidences your agreement to all the terms
+                                       and conditions of license.</strong></h4>
+<div
+                            style="text-align: center;"><a
+        href="https://creativecommons.org/licenses/by-sa/4.0/legalcode" target="_blank">
+<img border="0" width="50%" src="static/images/privacy.png"></div>
+            </div>
+        </section>
+
+{% block footer %}
+<div class="container">
+<p class="copyright">
+<a href="http://dx.doi.org/10.1093/nar/gkw993" target="_blank">Citing DrugCentral</a> &#169; <span id="copyright-year">{% now "Y" %}</span>.
+<a href="{% url 'privacy' %}">License</a>
+<img style="vertical-align:middle;margin:auto;top:0;left:340px;right:0;bottom:0;" src="static/images/mobile.png" />
+</p>
+</div>
+{% endblock %}
+
+{% endblock %}

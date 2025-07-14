@@ -1,0 +1,551 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ drug.name }}{% endblock %}
+
+{% block main %}
+
+{% if m %}
+{% include 'substructuresearch.html' %}
+{% elif s %}
+{% include 'similaritysearch.html' %}
+{% else %}
+{% include 'search.html' %}
+{% endif %}
+
+<br>
+<h1 class="starfont">{{ drug.name }}
+      🐶<a style="font-size: 15px; color: #f0db4f" href="#Vet">
+    Veterinary Use | </a>
+    <a style="font-size: 15px; color: #f0db4f" href="#druguse">
+    Indications/Contra  </a>
+
+<a style="font-size: 15px; color: #f0db4f" href="#FAER">
+    | FAERs-F </a>
+    <a style="font-size: 15px; color: #f0db4f" href="#FAERM">
+    | FAERs-M </a>
+    <a style="font-size: 15px; color: #f0db4f" href="#Orange">
+    | Orange Bk </a>
+     <a style="font-size: 15px; color: #f0db4f" href="#Bio">
+    | BioActivity |</a>
+
+</h1>
+
+<table>
+<tr><th>Stem definition</th><th>Drug id</th><th>CAS RN</th></tr>
+<tr>
+<td>{{ drug.stem.definition }}</td>
+<td>{{ drug.id }}</td>
+<td>{{ drug.cas_reg_no }}</td>
+</tr>
+</table>
+
+<h2 class="starfont3">Description:</h2>
+<table><tr><th>Molecule</th><th>Description</th></tr><tr>
+<td>
+{% if drug.molimg %}
+<a href="{% url 'drug-image' drug.id %}"><img class="sizeM" src="{% url 'drug-image' drug.id %}" /></a>
+{% endif %}
+<p>
+{% if drug.molfile %}
+<a href="{% url 'drug-molfile' drug.id %}">Molfile</a>
+{% endif %}
+{% if drug.inchi %}
+<a href="{% url 'drug-inchi' drug.id %}">Inchi</a>
+{% endif %}
+{% if drug.smiles %}
+<a href="{% url 'drug-smiles' drug.id %}">Smiles</a>
+{% endif %}
+</p>
+<p style="font-weight:bold">Synonyms:</p>
+{% if drug.synonyms %}
+<ul>
+{% for synonym in drug.synonyms %}
+<li>
+{{ synonym.name }}
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}</td>
+<td>{% if drug.mrdef %}
+{{ drug.mrdef }}
+{% endif %}<ul>
+<li>Molecular weight: {{ drug.cd_molweight|floatformat:"-2" }}</li>
+<li>Formula: {{ drug.cd_formula }}</li>
+<li>CLOGP: {{ drug.clogp|floatformat:"-2" }}</li>
+<li>LIPINSKI: {{ drug.lipinski }}</li>
+<li>HAC: {{ drug.o_n }}</li>
+<li>HDO: {{ drug.oh_nh }}</li>
+<li>TPSA: {{ drug.tpsa|floatformat:"-2" }}</li>
+<li>ALOGS: {{ drug.alogs|floatformat:"-2" }}</li>
+<li>ROTB: {{ drug.rotb }}</li>
+{% if drug.status %}
+<hr>
+<li>Status: {{ drug.status }}</li>
+<hr>
+<i style="font-size: small; "> Legend:<br>OFP - off patent<br> OFM - off market<br> ONP - on patent</i>
+{% endif %}
+</ul></td>
+</tr>
+</table>
+
+<h2 class="starfont3">Drug dosage:</h2>
+{% if drug.dosages %}
+<table class="">
+<tr><th>Dose</th><th>Unit</th><th>Route</th></tr>
+{% for dosage in drug.dosages %}
+<tr>
+<td>{{ dosage.ddd|floatformat:"-2" }}</td>
+<td>{{ dosage.unit_type }}</td>
+<td>{{ dosage.route }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">ADMET properties:</h2>
+{% if drug.properties %}
+<table id="tbl_properties">
+<thead>
+<tr><th>Property</th><th>Value</th><th>Reference</th></tr>
+</thead>
+<tbody>
+{% for property in drug.properties %}
+<tr>
+<td>{{ property.property_type.symbol }} ({{ property.property_type.name}})</td>
+<td>{{ property.value|floatformat:"-2" }} {{ property.property_type.units|default_if_none:'' }}</td>
+<td>
+{% if property.reference.url and property.reference.url != '(null)' %}<a href="{{ property.reference.url }}">{% endif %}{{ property.reference.authors }}{% if property.reference.url and property.reference.url != '(null)' %}</a>{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_properties').DataTable( {
+        "order": [[ 1, "desc" ]]
+    } );
+} );</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">Approvals:</h2>
+{% if drug.approvals %}
+<table id="tbl_approvals">
+<thead>
+<tr><th>Date</th><th>Agency</th><th>Company</th><th>Orphan</th></tr>
+</thead>
+<tbody>
+{% for approval in drug.approvals %}
+<tr>
+<td>{{ approval.approval }}</td>
+<td>{{ approval.type_id|default_if_none:'' }}</td>
+<td>{{ approval.applicant|default_if_none:'' }}</td>
+<td><input type="checkbox" disabled="disabled" {% if approval.orphan %}checked="checked"{% endif %} /><span></span></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_approvals').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 id="FAER"></h2>
+<h2 class="starfont3">FDA Adverse Event Reporting System (Female)</h2>
+{% if drug.faers_female %}
+<table id="tbl_faers_female">
+<thead>
+<tr><th>MedDRA adverse event term</th><th>Likelihood ratio</th><th>Likelihood ratio threshold</th><th>Patients taking drug having adverse event</th><th>Patients taking drug not having adverse event</th><th>Patients not taking drug having adverse event</th><th>Patients not taking drug not having adverse event</th></tr>
+</thead>
+<tbody>
+{% for faer in drug.faers_female %}
+<tr>
+<td>{{ faer.meddra_name }}</td>
+<td>{{ faer.llr|floatformat:"-2" }}</td>
+<td>{{ faer.llr_threshold|floatformat:"-2" }}</td>
+<td>{{ faer.drug_ae }}</td>
+<td>{{ faer.drug_no_ae }}</td>
+<td>{{ faer.no_drug_ae }}</td>
+<td>{{ faer.no_drug_no_ae }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_faers_female').DataTable( {
+        "order": [[ 1, "desc" ]]
+    } );
+} );</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 id="FAERM"></h2>
+<h2 class="starfont3">FDA Adverse Event Reporting System (Male)</h2>
+{% if drug.faers_male %}
+<table id="tbl_faers_male">
+<thead>
+<tr><th>MedDRA adverse event term</th><th>Likelihood ratio</th><th>Likelihood ratio threshold</th><th>Patients taking drug having adverse event</th><th>Patients taking drug not having adverse event</th><th>Patients not taking drug having adverse event</th><th>Patients not taking drug not having adverse event</th></tr>
+</thead>
+<tbody>
+{% for faer in drug.faers_male %}
+<tr>
+<td>{{ faer.meddra_name }}</td>
+<td>{{ faer.llr|floatformat:"-2" }}</td>
+<td>{{ faer.llr_threshold|floatformat:"-2" }}</td>
+<td>{{ faer.drug_ae }}</td>
+<td>{{ faer.drug_no_ae }}</td>
+<td>{{ faer.no_drug_ae }}</td>
+<td>{{ faer.no_drug_no_ae }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_faers_male').DataTable( {
+        "order": [[ 1, "desc" ]]
+    } );
+} );</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">FDA Adverse Event Reporting System (Geriatric)</h2>
+{% if drug.faers_ger %}
+<table id="tbl_faers_ger">
+<thead>
+<tr><th>MedDRA adverse event term</th><th>Likelihood ratio</th><th>Likelihood ratio threshold</th><th>Patients taking drug having adverse event</th><th>Patients taking drug not having adverse event</th><th>Patients not taking drug having adverse event</th><th>Patients not taking drug not having adverse event</th></tr>
+</thead>
+<tbody>
+{% for faer in drug.faers_ger %}
+<tr>
+<td>{{ faer.meddra_name }}</td>
+<td>{{ faer.llr|floatformat:"-2" }}</td>
+<td>{{ faer.llr_threshold|floatformat:"-2" }}</td>
+<td>{{ faer.drug_ae }}</td>
+<td>{{ faer.drug_no_ae }}</td>
+<td>{{ faer.no_drug_ae }}</td>
+<td>{{ faer.no_drug_no_ae }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_faers_ger').DataTable( {
+        "order": [[ 1, "desc" ]]
+    } );
+} );</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+
+<h2 class="starfont3">FDA Adverse Event Reporting System (Pediatric)</h2>
+{% if drug.faers_ped %}
+<table id="tbl_faers_ped">
+<thead>
+<tr><th>MedDRA adverse event term</th><th>Likelihood ratio</th><th>Likelihood ratio threshold</th><th>Patients taking drug having adverse event</th><th>Patients taking drug not having adverse event</th><th>Patients not taking drug having adverse event</th><th>Patients not taking drug not having adverse event</th></tr>
+</thead>
+<tbody>
+{% for faer in drug.faers_ped %}
+<tr>
+<td>{{ faer.meddra_name }}</td>
+<td>{{ faer.llr|floatformat:"-2" }}</td>
+<td>{{ faer.llr_threshold|floatformat:"-2" }}</td>
+<td>{{ faer.drug_ae }}</td>
+<td>{{ faer.drug_no_ae }}</td>
+<td>{{ faer.no_drug_ae }}</td>
+<td>{{ faer.no_drug_no_ae }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_faers_ped').DataTable( {
+        "order": [[ 1, "desc" ]]
+    } );
+} );</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+
+<h2 class="starfont3">Pharmacologic Action:</h2>
+{% if drug.atcs or drug.pharmaclass_set.exists %}
+<table id="tbl_atcs">
+<thead>
+<tr><th>Source</th><th>Code</th><th>Description</th></tr>
+</thead>
+<tbody>
+{% for atc in drug.atcs %}
+<tr>
+<td>ATC</td>
+<td>{{ atc.code }}</td>
+<td id="nobr">{{ atc.l1_name }}<br />{{ atc.l2_name }}<br />{{ atc.l3_name }}<br /> {{ atc.l4_name }}</tr>
+{% endfor %}
+{% for pharma_class in drug.pharma_classes %}
+<tr>
+<td>{{ pharma_class.source }} {{ pharma_class.type }}</td>
+<td>{{ pharma_class.class_code }}</td>
+<td>{{ pharma_class.name }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_atcs').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+<h2 id ="druguse"></h2>
+
+<h2 class="starfont3">Drug Use <a style="font-size: 11px; color:  #f0db4f" href="https://forms.gle/JBNbKmnrPtKr6fTW6" target="_blank">|
+    Suggest Off label Use Form|</a>   <a style="font-size: 11px; color:  #f0db4f" href="{% url 'help' %}">
+    |View
+    source of the
+    data|</a>
+</h2>
+{% if drug.omops %}
+<table id="tbl_omops">
+<thead>
+<tr><th>Disease</th><th>Relation</th><th>SNOMED_ID</th><th>DOID</th></tr>
+</thead>
+<tbody>
+{% for omop in drug.omops %}
+<tr>
+<td>{{ omop.concept_name }}</td>
+<td style="color:#de710d; text-transform: capitalize;font-weight: 700">{{ omop.relationship_name }}</td>
+<td>{{ omop.snomed_conceptid|default_if_none:'' }}</td>
+<td>{{ omop.doid_xref_doid|default_if_none:'' }}</td>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_omops').DataTable( {
+        "order": []
+    } );
+} );</script>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+<h2 id ="Vet"></h2>
+<br><br><br>
+<h2 class="starfont3" >🐶 Veterinary Drug Use</h2>
+{% if drug.vetomops %}
+<table id="tbl_vetomops">
+<thead>
+<tr><th>Species</th><th>Use</th><th>Relation</th></tr>
+</thead>
+<tbody>
+{% for vetomop in drug.vetomops %}
+<tr>
+<td>{{ vetomop.species }}</td>
+<td>{{ vetomop.concept_name }}</td>
+<td style="color:#de710d; text-transform: capitalize;font-weight: 700">{{ vetomop.relationship_type }}</td>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_vetomops').DataTable( {
+        "order": []
+    } );
+} );</script>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+<h2 class="starfont3">🐶 Veterinary products</h2>
+{% if drug.vetprods %}
+<table id="tbl_vetprods">
+<thead>
+<tr><th>Product</th><th>Applicant</th><th>Ingredients</th></tr>
+</thead>
+<tbody>
+{% for vetprod in drug.vetprods %}
+<tr>
+<td>{{ vetprod.trade_name }}</td>
+<td>{{ vetprod.applicant }}</td>
+<td>{{ vetprod.active_ingredients_count }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_vetprods').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">Acid dissociation constants calculated using MoKa v3.0.0</h2>
+{% if drug.pkas %}
+<table id="tbl_pkas">
+<thead>
+<tr><th>Dissociation level</th><th>Dissociation constant</th><th>Type (acidic/basic)</th></tr>
+</thead>
+<tbody>
+{% for pka in drug.pkas %}
+<tr>
+<td>{{ pka.pka_level }}</td>
+<td>{{ pka.value }}</td>
+<td>{% if pka.pka_type|lower == 'a' %}acidic{% else %}Basic{% endif %}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_pkas').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+<h2 id ="Orange"></h2>
+<h2 class="starfont3">Orange Book patent data (new drug applications)</h2>
+{% if drug.ob_patents %}
+<table id="tbl_ob-patents">
+<thead>
+<tr><th>Formulation strength</th><th>Trade name</th><th>Applicant</th><th>Application number</th><th>Approval date</th><th>Type</th><th>Dose form</th><th>Route</th><th>Patent number</th><th>Patent expiration date</th><th>Patent use</th></tr>
+</thead>
+<tbody>
+{% for ob_patent in drug.ob_patents %}
+<tr>
+<td>{{ ob_patent.strength }}</td>
+<td>{{ ob_patent.trade_name }}</td>
+<td>{{ ob_patent.applicant }}</td>
+<td>{{ ob_patent.appl_type }}{{ ob_patent.appl_no }}</td>
+<td>{{ ob_patent.approval_date }}</td>
+<td>{{ ob_patent.type }}</td>
+<td>{{ ob_patent.dose_form }}</td>
+<td>{{ ob_patent.route }}</td>
+<td>{{ ob_patent.patent_no }}</td>
+<td>{{ ob_patent.patent_expire_date }}</td>
+<td>{{ ob_patent.description }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_ob-patents').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">Orange Book exclusivity data (new drug applications)</h2>
+{% if drug.ob_exclusivities %}
+<table id="tbl_ob-exclusivities">
+<thead>
+<tr><th>Formulation strength</th><th>Trade name</th><th>Applicant</th><th>Application number</th><th>Approval date</th><th>Type</th><th>Dose form</th><th>Route</th><th>Exclusivity date</th><th>Description</th></tr>
+</thead>
+<tbody>
+{% for ob_exclusivity in drug.ob_exclusivities %}
+<tr>
+<td>{{ ob_exclusivity.strength }}</td>
+<td>{{ ob_exclusivity.trade_name }}</td>
+<td>{{ ob_exclusivity.applicant }}</td>
+<td>{{ ob_exclusivity.appl_type }}{{ ob_exclusivity.appl_no }}</td>
+<td>{{ ob_exclusivity.approval_date }}</td>
+<td>{{ ob_exclusivity.type }}</td>
+<td>{{ ob_exclusivity.dose_form }}</td>
+<td>{{ ob_exclusivity.route }}</td>
+<td>{{ ob_exclusivity.exclusivity_date }}</td>
+<td>{{ ob_exclusivity.description }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_ob-exclusivities').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+<h2 id ="Bio"></h2>
+<a name="activity"></a><h2 class="starfont3">Bioactivity Summary:</h2>
+{% if drug.activities %}
+<table id="tbl_activities">
+<thead>
+<tr><th>Target</th><th>Class</th><th>Pharos</th><th>UniProt</th><th>Action</th><th>Type</th><th>Activity value<br>(-log[M])</th><th>Mechanism<br>action</th><th>Bioact source</th><th>MoA source</th></tr>
+</thead>
+<tbody>
+{% for activity in drug.activities %}
+<tr>
+<td>{{ activity.target_name }}</td>
+<td>{{ activity.target_class_id }}</td>
+<td>
+{% for swissprot, accession in activity.swissprots_human %}
+<div><a href="https://pharos.nih.gov/idg/targets/{{ accession }}">{{ accession }}</a></div>
+{% endfor %}
+</td>
+<td>
+{% for swissprot, accession in activity.swissprots_human %}
+<div><a href="http://www.uniprot.org/uniprot/{{ swissprot }}">{{ swissprot }}</a></div>
+{% endfor %}
+{% for swissprot, accession in activity.swissprots_nonhuman %}
+<div><a href="http://www.uniprot.org/uniprot/{{ swissprot }}">{{ swissprot }}</a></div>
+{% endfor %}
+</td>
+<td>{{ activity.action_type_id|default_if_none:'' }}</td>
+<td>{{ activity.act_type|default_if_none:'' }}</td>
+<td>{{ activity.act_value|floatformat:"-2" }}</td>
+<td id="nobr2"><input type="checkbox" disabled="disabled" {% if activity.moa == 1 %}checked="checked"{% endif %}
+/><span></span></td>
+<td>{% if activity.act_source_url %}<a href="{{ activity.act_source_url  }}">{{ activity.act_source|default_if_none:'' }}{% else %}{{ activity.act_source|default_if_none:'' }}{% endif %}</a></td>
+<td>{% if activity.moa_source_url %}<a href="{{ activity.moa_source_url }}">{{ activity.moa_source|default_if_none:'' }}{% else %}{{ activity.moa_source|default_if_none:'' }}{% endif %}</a></td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_activities').DataTable( {
+        "order": []
+    } );
+} );</script>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">External reference:</h2>
+{% if drug.identifiers %}
+<table id="tbl_identifiers">
+<thead>
+<tr><th>ID</th><th>Source</th></tr>
+</thead>
+<tbody>
+{% for identifier in drug.identifiers %}
+<tr>
+<td>{% if identifier.id_type.url %}<a href="{{ identifier.id_type.url }}{{ identifier.identifier }}" target="_blank">{{ identifier.identifier }}</a>{% else %}{{ identifier.identifier }}{% endif %}</td>
+<td>{{ identifier.id_type_id }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_identifiers').DataTable(); });</script>
+{% else %}
+<p style="color: #f0db4f">None</p>
+{% endif %}
+
+<h2 class="starfont3">Pharmaceutical products:</h2>
+{% if drug.active_ingredients_limit_30 %}
+<table id="tbl_active-ingredients">
+<thead>
+<tr><th>Product</th><th>Category</th><th>Ingredients</th><th>NDC</th><th>Form</th><th>Quantity</th><th>Route</th><th>Marketing</th><th>Label</th></tr>
+</thead>
+<tbody>
+{% for active_ingredient in drug.active_ingredients_limit_30 %}
+<tr>
+<td><a href="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid={{ active_ingredient.label_id }}">{{ active_ingredient.product_product_name }}</a></td>
+<td>{{ active_ingredient.label_category }}</td>
+<td>{{ active_ingredient.product_active_ingredient_count }}</td>
+<td>{{ active_ingredient.product_ndc_product_code }}</td>
+<td>{{ active_ingredient.product_form }}</td>
+<td>{{ active_ingredient.quantity|floatformat:"-2" }} {{ active_ingredient.unit }}</td>
+<td>{{ active_ingredient.product_route }}</td>
+<td>{{ active_ingredient.product_marketing_status }}</td>
+<td>
+{% if active_ingredient.section_count %}
+<a href="{% url 'label-view' active_ingredient.label_id %}">{{ active_ingredient.section_count }} sections</a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<script type="text/javascript">$(document).ready(function() { $('#tbl_active-ingredients').DataTable(); });</script>
+{% else %}
+<p style="color:#f0db4f">None</p>
+{% endif %}
+
+
+
+<p></p>
+
+{% endblock %}
+ {% block overview %}{% endblock %}

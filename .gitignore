@@ -1,0 +1,6 @@
+.env
+/static
+/init/pg_hba.conf
+/nginx/default.conf
+/__pycache__
+/init/drugcen.dump

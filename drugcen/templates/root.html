@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Drug Central{% endblock %}
+
+{% block main %}
+
+{% include 'search.html' %}
+{% if target_result %}
+<p>Target result:
+<table style="margin-bottom: 30px;">
+<tr>
+<td id="nobr3" style="color: dodgerblue">
+<a href="{% url 'target-view' target_result.accession %}?q={{ q|urlencode }}">
+<strong class="sealine">{{target_result.name}}</strong>
+</a></td>
+<td>
+<ul>
+<li>Accession: {{ target_result.accession }}</li>
+<li>Swissprot: {{ target_result.swissprot }}</li>
+<li>Organism: {{ target_result.organism }}</li>
+{% if target_result.gene %}
+<li>Gene: {{ target_result.gene }}</li>
+{% endif %}
+{% if target_result.target_classes %}
+<li>Target class{{ target_result.target_classes|pluralize:'es' }}: {{ target_result.target_classes|join:', ' }}</li>
+{% endif %}
+</ul>
+</td>
+</tr>
+</table>
+<td id="sea">{{ drug.mrdef|default_if_none:'' }}</td>
+{% endif %}
+{% if q %}
+<p>Drug results: {{ result_count }}</p>
+{% if result_count %}
+<table style="margin-bottom: 30px;">
+{% for drug in results %}
+<tr>
+<td id="nobr3" style="color: dodgerblue"><!--{{ drug.rank }}-->
+<a href="{% url 'drugcard-view' drug.id %}?q={{ q|urlencode }}">
+<strong class="sealine">{{drug.name}}</strong>
+</a></td>
+<td id="sea">{{ drug.mrdef|default_if_none:'' }}</td>
+<td>
+{% if drug.molimg %}
+<a href="{% url 'drug-image' drug.id %}"><img id="sea2" src="{% url 'drug-image' drug.id %}" /></a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endif %}
+{% endblock %}

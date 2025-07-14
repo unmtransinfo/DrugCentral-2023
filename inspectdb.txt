@@ -1,0 +1,775 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+from django.db import models
+
+
+class ActTableFull(models.Model):
+    act_id = models.IntegerField(primary_key=True)
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    target = models.ForeignKey('TargetDictionary', models.DO_NOTHING)
+    target_name = models.CharField(max_length=200, blank=True, null=True)
+    target_class = models.ForeignKey('TargetClass', models.DO_NOTHING, db_column='target_class', blank=True, null=True)
+    accession = models.CharField(max_length=1000, blank=True, null=True)
+    gene = models.CharField(max_length=1000, blank=True, null=True)
+    swissprot = models.CharField(max_length=1000, blank=True, null=True)
+    act_value = models.FloatField(blank=True, null=True)
+    act_unit = models.CharField(max_length=100, blank=True, null=True)
+    act_type = models.CharField(max_length=100, blank=True, null=True)
+    act_comment = models.CharField(max_length=1000, blank=True, null=True)
+    act_source = models.CharField(max_length=100, blank=True, null=True)
+    relation = models.CharField(max_length=5, blank=True, null=True)
+    moa = models.SmallIntegerField(blank=True, null=True)
+    moa_source = models.CharField(max_length=100, blank=True, null=True)
+    act_source_url = models.CharField(max_length=500, blank=True, null=True)
+    moa_source_url = models.CharField(max_length=500, blank=True, null=True)
+    action_type = models.ForeignKey('ActionType', models.DO_NOTHING, db_column='action_type', blank=True, null=True)
+    first_in_class = models.SmallIntegerField(blank=True, null=True)
+    tdl = models.CharField(max_length=500, blank=True, null=True)
+    act_ref = models.ForeignKey('Reference', models.DO_NOTHING, blank=True, null=True)
+    moa_ref = models.ForeignKey('Reference', models.DO_NOTHING, blank=True, null=True)
+    organism = models.CharField(max_length=150, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'act_table_full'
+
+
+class ActionType(models.Model):
+    action_type = models.CharField(unique=True, max_length=50)
+    description = models.CharField(max_length=200)
+    parent_type = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'action_type'
+
+
+class ActiveIngredient(models.Model):
+    active_moiety_unii = models.CharField(max_length=20, blank=True, null=True)
+    active_moiety_name = models.CharField(max_length=4000, blank=True, null=True)
+    unit = models.CharField(max_length=20, blank=True, null=True)
+    quantity = models.FloatField(blank=True, null=True)
+    substance_unii = models.CharField(max_length=20, blank=True, null=True)
+    substance_name = models.CharField(max_length=4000, blank=True, null=True)
+    ndc_product_code = models.ForeignKey('Product', models.DO_NOTHING, db_column='ndc_product_code', blank=True, null=True)
+    struct = models.ForeignKey('Structures', models.DO_NOTHING, blank=True, null=True)
+    quantity_denom_unit = models.CharField(max_length=20, blank=True, null=True)
+    quantity_denom_value = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'active_ingredient'
+
+
+class Approval(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    approval = models.DateField(blank=True, null=True)
+    type = models.ForeignKey('ApprovalType', models.DO_NOTHING, db_column='type')
+    applicant = models.CharField(max_length=100, blank=True, null=True)
+    orphan = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'approval'
+        unique_together = (('struct', 'type'),)
+
+
+class ApprovalType(models.Model):
+    descr = models.CharField(unique=True, max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'approval_type'
+
+
+class Atc(models.Model):
+    code = models.CharField(unique=True, max_length=7)
+    chemical_substance = models.CharField(max_length=250)
+    l1_code = models.CharField(max_length=1)
+    l1_name = models.CharField(max_length=200)
+    l2_code = models.CharField(max_length=3)
+    l2_name = models.CharField(max_length=200)
+    l3_code = models.CharField(max_length=4)
+    l3_name = models.CharField(max_length=200)
+    l4_code = models.CharField(max_length=5)
+    l4_name = models.CharField(max_length=200)
+    chemical_substance_count = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'atc'
+
+
+class AtcDdd(models.Model):
+    atc_code = models.CharField(max_length=7, blank=True, null=True)
+    ddd = models.FloatField()
+    unit_type = models.CharField(max_length=10, blank=True, null=True)
+    route = models.CharField(max_length=20, blank=True, null=True)
+    comment = models.CharField(max_length=100, blank=True, null=True)
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'atc_ddd'
+
+
+class AttrType(models.Model):
+    name = models.CharField(unique=True, max_length=100)
+    type = models.CharField(max_length=20)
+
+    class Meta:
+        managed = False
+        db_table = 'attr_type'
+
+
+class DataSource(models.Model):
+    src_id = models.SmallIntegerField(primary_key=True)
+    source_name = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'data_source'
+
+
+class Dbversion(models.Model):
+    version = models.BigIntegerField(primary_key=True)
+    dtime = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'dbversion'
+
+
+class Ddi(models.Model):
+    drug_class1 = models.ForeignKey('DrugClass', models.DO_NOTHING, db_column='drug_class1')
+    drug_class2 = models.ForeignKey('DrugClass', models.DO_NOTHING, db_column='drug_class2')
+    ddi_ref_id = models.IntegerField()
+    ddi_risk = models.ForeignKey('DdiRisk', models.DO_NOTHING, db_column='ddi_risk')
+    description = models.CharField(max_length=4000, blank=True, null=True)
+    source_id = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ddi'
+        unique_together = (('drug_class1', 'drug_class2', 'ddi_ref_id'),)
+
+
+class DdiRisk(models.Model):
+    risk = models.CharField(max_length=200)
+    ddi_ref_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'ddi_risk'
+        unique_together = (('risk', 'ddi_ref_id'),)
+
+
+class Doid(models.Model):
+    id = models.IntegerField(primary_key=True)
+    label = models.CharField(max_length=1000, blank=True, null=True)
+    doid = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    url = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'doid'
+
+
+class DoidXref(models.Model):
+    doid = models.ForeignKey(Doid, models.DO_NOTHING, db_column='doid', blank=True, null=True)
+    source = models.CharField(max_length=50, blank=True, null=True)
+    xref = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'doid_xref'
+        unique_together = (('doid', 'source', 'xref'),)
+
+
+class DrugClass(models.Model):
+    name = models.CharField(unique=True, max_length=500)
+    is_group = models.SmallIntegerField()
+    source = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'drug_class'
+
+
+class Faers(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING, blank=True, null=True)
+    meddra_name = models.CharField(max_length=200)
+    meddra_code = models.BigIntegerField()
+    level = models.CharField(max_length=5, blank=True, null=True)
+    llr = models.FloatField(blank=True, null=True)
+    llr_threshold = models.FloatField(blank=True, null=True)
+    drug_ae = models.IntegerField(blank=True, null=True)
+    drug_no_ae = models.IntegerField(blank=True, null=True)
+    no_drug_ae = models.IntegerField(blank=True, null=True)
+    no_drug_no_ae = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'faers'
+
+
+class FaersFemale(models.Model):
+    struct_id = models.IntegerField(blank=True, null=True)
+    meddra_name = models.CharField(max_length=200)
+    meddra_code = models.BigIntegerField()
+    level = models.CharField(max_length=5, blank=True, null=True)
+    llr = models.FloatField(blank=True, null=True)
+    llr_threshold = models.FloatField(blank=True, null=True)
+    drug_ae = models.IntegerField(blank=True, null=True)
+    drug_no_ae = models.IntegerField(blank=True, null=True)
+    no_drug_ae = models.IntegerField(blank=True, null=True)
+    no_drug_no_ae = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'faers_female'
+
+
+class FaersMale(models.Model):
+    struct_id = models.IntegerField(blank=True, null=True)
+    meddra_name = models.CharField(max_length=200)
+    meddra_code = models.BigIntegerField()
+    level = models.CharField(max_length=5, blank=True, null=True)
+    llr = models.FloatField(blank=True, null=True)
+    llr_threshold = models.FloatField(blank=True, null=True)
+    drug_ae = models.IntegerField(blank=True, null=True)
+    drug_no_ae = models.IntegerField(blank=True, null=True)
+    no_drug_ae = models.IntegerField(blank=True, null=True)
+    no_drug_no_ae = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'faers_male'
+
+
+class IdType(models.Model):
+    type = models.CharField(unique=True, max_length=50)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    url = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'id_type'
+
+
+class Identifier(models.Model):
+    identifier = models.CharField(max_length=50)
+    id_type = models.ForeignKey(IdType, models.DO_NOTHING, db_column='id_type')
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    parent_match = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'identifier'
+        unique_together = (('identifier', 'id_type', 'struct'),)
+
+
+class IjcConnectItems(models.Model):
+    id = models.CharField(primary_key=True, max_length=32)
+    username = models.CharField(max_length=128, blank=True, null=True)
+    type = models.CharField(max_length=200)
+    data = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ijc_connect_items'
+        unique_together = (('type', 'username'),)
+
+
+class IjcConnectStructures(models.Model):
+    id = models.CharField(primary_key=True, max_length=32)
+    structure_hash = models.CharField(max_length=64)
+    structure = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ijc_connect_structures'
+        unique_together = (('id', 'structure_hash'),)
+
+
+class InnStem(models.Model):
+    stem = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    definition = models.CharField(max_length=1000)
+    national_name = models.CharField(max_length=20, blank=True, null=True)
+    length = models.SmallIntegerField(blank=True, null=True)
+    discontinued = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'inn_stem'
+
+
+class Label(models.Model):
+    id = models.CharField(primary_key=True, max_length=50)
+    category = models.CharField(max_length=100, blank=True, null=True)
+    title = models.CharField(max_length=1000, blank=True, null=True)
+    effective_date = models.DateField(blank=True, null=True)
+    assigned_entity = models.CharField(max_length=500, blank=True, null=True)
+    pdf_url = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'label'
+
+
+class LincsSignature(models.Model):
+    struct_id1 = models.IntegerField(blank=True, null=True)
+    struct_id2 = models.IntegerField(blank=True, null=True)
+    is_parent1 = models.BooleanField(blank=True, null=True)
+    is_parent2 = models.BooleanField(blank=True, null=True)
+    cell_id = models.CharField(max_length=10, blank=True, null=True)
+    rmsd = models.FloatField(blank=True, null=True)
+    rmsd_norm = models.FloatField(blank=True, null=True)
+    pearson = models.FloatField(blank=True, null=True)
+    euclid = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'lincs_signature'
+        unique_together = (('struct_id1', 'struct_id2', 'is_parent1', 'is_parent2', 'cell_id'),)
+
+
+class ObExclusivity(models.Model):
+    appl_type = models.CharField(max_length=1, blank=True, null=True)
+    appl_no = models.CharField(max_length=6, blank=True, null=True)
+    product_no = models.CharField(max_length=3, blank=True, null=True)
+    exclusivity_code = models.ForeignKey('ObExclusivityCode', models.DO_NOTHING, db_column='exclusivity_code', blank=True, null=True)
+    exclusivity_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ob_exclusivity'
+
+
+class ObExclusivityCode(models.Model):
+    code = models.CharField(primary_key=True, max_length=10)
+    description = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ob_exclusivity_code'
+
+
+class ObPatent(models.Model):
+    appl_type = models.CharField(max_length=1, blank=True, null=True)
+    appl_no = models.CharField(max_length=6, blank=True, null=True)
+    product_no = models.CharField(max_length=3, blank=True, null=True)
+    patent_no = models.CharField(max_length=200, blank=True, null=True)
+    patent_expire_date = models.DateField(blank=True, null=True)
+    drug_substance_flag = models.CharField(max_length=1, blank=True, null=True)
+    drug_product_flag = models.CharField(max_length=1, blank=True, null=True)
+    patent_use_code = models.ForeignKey('ObPatentUseCode', models.DO_NOTHING, db_column='patent_use_code', blank=True, null=True)
+    delist_flag = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ob_patent'
+
+
+class ObPatentUseCode(models.Model):
+    code = models.CharField(primary_key=True, max_length=10)
+    description = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ob_patent_use_code'
+
+
+class ObProduct(models.Model):
+    ingredient = models.CharField(max_length=500, blank=True, null=True)
+    trade_name = models.CharField(max_length=200, blank=True, null=True)
+    applicant = models.CharField(max_length=50, blank=True, null=True)
+    strength = models.CharField(max_length=500, blank=True, null=True)
+    appl_type = models.CharField(max_length=1, blank=True, null=True)
+    appl_no = models.CharField(max_length=6, blank=True, null=True)
+    te_code = models.CharField(max_length=20, blank=True, null=True)
+    approval_date = models.DateField(blank=True, null=True)
+    rld = models.SmallIntegerField(blank=True, null=True)
+    type = models.CharField(max_length=5, blank=True, null=True)
+    applicant_full_name = models.CharField(max_length=200, blank=True, null=True)
+    dose_form = models.CharField(max_length=50, blank=True, null=True)
+    route = models.CharField(max_length=100, blank=True, null=True)
+    product_no = models.CharField(max_length=3, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'ob_product'
+
+
+class OmopRelationship(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    concept_id = models.IntegerField()
+    relationship_name = models.CharField(max_length=256)
+    concept_name = models.CharField(max_length=256)
+    umls_cui = models.CharField(max_length=8, blank=True, null=True)
+    snomed_full_name = models.CharField(max_length=500, blank=True, null=True)
+    cui_semantic_type = models.CharField(max_length=4, blank=True, null=True)
+    snomed_conceptid = models.BigIntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'omop_relationship'
+        unique_together = (('struct', 'concept_id'),)
+
+
+class Parentmol(models.Model):
+    cd_id = models.AutoField(primary_key=True)
+    name = models.CharField(unique=True, max_length=250, blank=True, null=True)
+    cas_reg_no = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    inchi = models.CharField(max_length=32672, blank=True, null=True)
+    nostereo_inchi = models.CharField(max_length=32672, blank=True, null=True)
+    molfile = models.TextField(blank=True, null=True)
+    molimg = models.BinaryField(blank=True, null=True)
+    smiles = models.CharField(max_length=32672, blank=True, null=True)
+    inchikey = models.CharField(max_length=27, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'parentmol'
+
+
+class Pdb(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    pdb = models.CharField(max_length=4)
+    chain_id = models.CharField(max_length=3, blank=True, null=True)
+    accession = models.CharField(max_length=20, blank=True, null=True)
+    title = models.CharField(max_length=1000, blank=True, null=True)
+    pubmed_id = models.IntegerField(blank=True, null=True)
+    exp_method = models.CharField(max_length=50, blank=True, null=True)
+    deposition_date = models.DateField(blank=True, null=True)
+    ligand_id = models.CharField(max_length=20, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pdb'
+        unique_together = (('struct', 'pdb'),)
+
+
+class PharmaClass(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING, blank=True, null=True)
+    type = models.CharField(max_length=20)
+    name = models.CharField(max_length=1000)
+    class_code = models.CharField(max_length=20, blank=True, null=True)
+    source = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pharma_class'
+        unique_together = (('struct', 'type', 'name'),)
+
+
+class Pka(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    pka_level = models.CharField(max_length=5, blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    pka_type = models.CharField(max_length=1)
+
+    class Meta:
+        managed = False
+        db_table = 'pka'
+
+
+class Prd2Label(models.Model):
+    ndc_product_code = models.OneToOneField('Product', models.DO_NOTHING, db_column='ndc_product_code', primary_key=True)
+    label = models.ForeignKey(Label, models.DO_NOTHING)
+    id = models.AutoField(unique=True)
+
+    class Meta:
+        managed = False
+        db_table = 'prd2label'
+        unique_together = (('ndc_product_code', 'label'),)
+
+
+class Product(models.Model):
+    ndc_product_code = models.CharField(unique=True, max_length=20)
+    form = models.CharField(max_length=250, blank=True, null=True)
+    generic_name = models.CharField(max_length=4000, blank=True, null=True)
+    product_name = models.CharField(max_length=1000, blank=True, null=True)
+    route = models.CharField(max_length=50, blank=True, null=True)
+    marketing_status = models.CharField(max_length=500, blank=True, null=True)
+    active_ingredient_count = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'product'
+
+
+class Property(models.Model):
+    id = models.AutoField()
+    property_type = models.ForeignKey('PropertyType', models.DO_NOTHING, blank=True, null=True)
+    property_type_symbol = models.CharField(max_length=10, blank=True, null=True)
+    struct = models.ForeignKey('Structures', models.DO_NOTHING, blank=True, null=True)
+    value = models.FloatField(blank=True, null=True)
+    reference = models.ForeignKey('Reference', models.DO_NOTHING, blank=True, null=True)
+    reference_type = models.CharField(max_length=50, blank=True, null=True)
+    source = models.CharField(max_length=80, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'property'
+
+
+class PropertyType(models.Model):
+    category = models.CharField(max_length=20, blank=True, null=True)
+    name = models.CharField(max_length=80, blank=True, null=True)
+    symbol = models.CharField(max_length=10, blank=True, null=True)
+    units = models.CharField(max_length=10, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'property_type'
+
+
+class ProteinType(models.Model):
+    type = models.CharField(unique=True, max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'protein_type'
+
+
+class RefType(models.Model):
+    type = models.CharField(unique=True, max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'ref_type'
+
+
+class Reference(models.Model):
+    pmid = models.IntegerField(unique=True, blank=True, null=True)
+    doi = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    document_id = models.CharField(unique=True, max_length=200, blank=True, null=True)
+    type = models.ForeignKey(RefType, models.DO_NOTHING, db_column='type', blank=True, null=True)
+    authors = models.CharField(max_length=4000, blank=True, null=True)
+    title = models.CharField(max_length=500, blank=True, null=True)
+    isbn10 = models.CharField(unique=True, max_length=10, blank=True, null=True)
+    url = models.CharField(max_length=1000, blank=True, null=True)
+    journal = models.CharField(max_length=100, blank=True, null=True)
+    volume = models.CharField(max_length=20, blank=True, null=True)
+    issue = models.CharField(max_length=20, blank=True, null=True)
+    dp_year = models.IntegerField(blank=True, null=True)
+    pages = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'reference'
+
+
+class Section(models.Model):
+    text = models.TextField(blank=True, null=True)
+    label = models.ForeignKey(Label, models.DO_NOTHING, blank=True, null=True)
+    code = models.CharField(max_length=20, blank=True, null=True)
+    title = models.CharField(max_length=4000, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'section'
+
+
+class Struct2Atc(models.Model):
+    struct = models.OneToOneField('Structures', models.DO_NOTHING, primary_key=True)
+    atc_code = models.ForeignKey(Atc, models.DO_NOTHING, db_column='atc_code')
+    id = models.AutoField(unique=True)
+
+    class Meta:
+        managed = False
+        db_table = 'struct2atc'
+        unique_together = (('struct', 'atc_code'),)
+
+
+class Struct2Drgclass(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING)
+    drug_class = models.ForeignKey(DrugClass, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'struct2drgclass'
+        unique_together = (('struct', 'drug_class'),)
+
+
+class Struct2Obprod(models.Model):
+    struct = models.OneToOneField('Structures', models.DO_NOTHING, primary_key=True)
+    prod = models.ForeignKey(ObProduct, models.DO_NOTHING)
+    strength = models.CharField(max_length=4000, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'struct2obprod'
+        unique_together = (('struct', 'prod'),)
+
+
+class Struct2Parent(models.Model):
+    struct = models.OneToOneField('Structures', models.DO_NOTHING, primary_key=True)
+    parent = models.ForeignKey(Parentmol, models.DO_NOTHING)
+
+    class Meta:
+        managed = False
+        db_table = 'struct2parent'
+        unique_together = (('struct', 'parent'),)
+
+
+class StructTypeDef(models.Model):
+    type = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'struct_type_def'
+
+
+class StructureType(models.Model):
+    struct = models.ForeignKey('Structures', models.DO_NOTHING, blank=True, null=True)
+    type = models.ForeignKey(StructTypeDef, models.DO_NOTHING, db_column='type')
+
+    class Meta:
+        managed = False
+        db_table = 'structure_type'
+        unique_together = (('struct', 'type'),)
+
+
+class Structures(models.Model):
+    cd_id = models.AutoField(primary_key=True)
+    cd_formula = models.CharField(max_length=100, blank=True, null=True)
+    cd_molweight = models.FloatField(blank=True, null=True)
+    id = models.IntegerField(unique=True)
+    clogp = models.FloatField(blank=True, null=True)
+    alogs = models.FloatField(blank=True, null=True)
+    cas_reg_no = models.CharField(unique=True, max_length=50, blank=True, null=True)
+    tpsa = models.FloatField(blank=True, null=True)
+    lipinski = models.IntegerField(blank=True, null=True)
+    name = models.CharField(max_length=250, blank=True, null=True)
+    no_formulations = models.IntegerField(blank=True, null=True)
+    stem = models.ForeignKey(InnStem, models.DO_NOTHING, db_column='stem', blank=True, null=True)
+    molfile = models.TextField(blank=True, null=True)
+    mrdef = models.CharField(max_length=32672, blank=True, null=True)
+    enhanced_stereo = models.BooleanField()
+    arom_c = models.IntegerField(blank=True, null=True)
+    sp3_c = models.IntegerField(blank=True, null=True)
+    sp2_c = models.IntegerField(blank=True, null=True)
+    sp_c = models.IntegerField(blank=True, null=True)
+    halogen = models.IntegerField(blank=True, null=True)
+    hetero_sp2_c = models.IntegerField(blank=True, null=True)
+    rotb = models.IntegerField(blank=True, null=True)
+    molimg = models.BinaryField(blank=True, null=True)
+    o_n = models.IntegerField(blank=True, null=True)
+    oh_nh = models.IntegerField(blank=True, null=True)
+    inchi = models.CharField(max_length=32672, blank=True, null=True)
+    smiles = models.CharField(max_length=32672, blank=True, null=True)
+    rgb = models.IntegerField(blank=True, null=True)
+    fda_labels = models.IntegerField(blank=True, null=True)
+    inchikey = models.CharField(max_length=27, blank=True, null=True)
+    status = models.CharField(max_length=10, blank=True, null=True)
+    tsv = models.TextField(blank=True, null=True)  # This field type is a guess.
+
+    class Meta:
+        managed = False
+        db_table = 'structures'
+
+
+class Synonyms(models.Model):
+    syn_id = models.AutoField(primary_key=True)
+    id = models.ForeignKey(Structures, models.DO_NOTHING, db_column='id', blank=True, null=True)
+    name = models.CharField(unique=True, max_length=250)
+    preferred_name = models.SmallIntegerField(blank=True, null=True)
+    parent = models.ForeignKey(Parentmol, models.DO_NOTHING, blank=True, null=True)
+    lname = models.CharField(unique=True, max_length=250, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'synonyms'
+        unique_together = (('id', 'preferred_name'), ('parent', 'preferred_name'),)
+
+
+class TargetClass(models.Model):
+    l1 = models.CharField(primary_key=True, max_length=50)
+    id = models.AutoField()
+
+    class Meta:
+        managed = False
+        db_table = 'target_class'
+
+
+class TargetComponent(models.Model):
+    accession = models.CharField(unique=True, max_length=20, blank=True, null=True)
+    swissprot = models.CharField(unique=True, max_length=20, blank=True, null=True)
+    organism = models.CharField(max_length=150, blank=True, null=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    gene = models.CharField(max_length=25, blank=True, null=True)
+    geneid = models.BigIntegerField(blank=True, null=True)
+    tdl = models.CharField(max_length=5, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'target_component'
+
+
+class TargetDictionary(models.Model):
+    name = models.CharField(max_length=200)
+    target_class = models.CharField(max_length=50)
+    protein_components = models.SmallIntegerField()
+    protein_type = models.CharField(max_length=50, blank=True, null=True)
+    tdl = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'target_dictionary'
+
+
+class TargetGo(models.Model):
+    id = models.CharField(primary_key=True, max_length=10)
+    term = models.CharField(max_length=200, blank=True, null=True)
+    type = models.CharField(max_length=1, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'target_go'
+
+
+class TargetKeyword(models.Model):
+    id = models.CharField(primary_key=True, max_length=7)
+    descr = models.CharField(max_length=4000, blank=True, null=True)
+    category = models.CharField(max_length=50, blank=True, null=True)
+    keyword = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'target_keyword'
+
+
+class Td2Tc(models.Model):
+    target = models.OneToOneField(TargetDictionary, models.DO_NOTHING, primary_key=True)
+    component_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'td2tc'
+        unique_together = (('target', 'component_id'),)
+
+
+class Tdgo2Tc(models.Model):
+    go = models.ForeignKey(TargetGo, models.DO_NOTHING)
+    component = models.ForeignKey(TargetComponent, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tdgo2tc'
+
+
+class Tdkey2Tc(models.Model):
+    tdkey = models.ForeignKey(TargetKeyword, models.DO_NOTHING)
+    component = models.ForeignKey(TargetComponent, models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tdkey2tc'
