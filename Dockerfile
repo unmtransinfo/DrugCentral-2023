@@ -1,16 +1,15 @@
-FROM python:3.10.12-slim
+FROM python:3.12-alpine
 
 # Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apk update && \
+    apk add --no-cache \
         curl \
         netcat-openbsd \
         gcc \
         libpq-dev \
         postgresql-client \
-        libfreetype6-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+        freetype-dev
+
 
 # Set working directory
 WORKDIR /app
@@ -20,6 +19,7 @@ COPY . .
 
 # Install Python dependencies
 RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
 RUN pip install -r requirements.txt
 
 # Set environment variables (important for Django settings)

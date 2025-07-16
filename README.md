@@ -1,4 +1,4 @@
-# DrugCentral2020
+# DrugCentral2023
 
 DrugCentral provides information on active ingredients chemical entities, pharmaceutical products, drug mode of action, indications, pharmacologic action. We monitor FDA, EMA, and PMDA for new drug approval on regular basis to ensure currency of the resource. Limited information on discontinued and drugs approved outside US is also available however regulatory approval information can't be verified.
 

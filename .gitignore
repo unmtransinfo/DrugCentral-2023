@@ -4,3 +4,4 @@
 /nginx/default.conf
 /__pycache__
 /init/drugcen.dump
+.DS_Store
