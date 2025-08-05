@@ -94,13 +94,11 @@ API and UI tested for:
 
 ## 8. Domain Transfer Plan
 
-- **Current domain:** drugcentral.org (hosted on DigitalOcean DNS)
+- **Current domain:** drugcentral.org (hosted on DigitalOcean DNS, Registared under GoDaddy)
 - **Planned migration:**
-  - Transfer DNS zone to AWS Route 53
-  - Create a hosted zone for drugcentral.org
-  - Update name servers at domain registrar to point to Route 53
-  - Map A record to EC2 Elastic IP
-  - Add SSL via Certbot + Nginx
+  - Update name servers at GoDaddy to point to Route 53
+  - Map A record to EC2 Public IP Address
+  - Add SSL via Certbot + Nginx(Https)
 
 ---
 [http://3.14.79.108:8000/](http://3.14.79.108:8000/)
