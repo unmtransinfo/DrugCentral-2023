@@ -22,16 +22,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push DB image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile.db
-          push: true
-          tags: unmtransinfo/drugcen-db:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
       - name: Build and push Web image
         uses: docker/build-push-action@v6
         with:
