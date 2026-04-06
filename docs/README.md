@@ -1,104 +1,100 @@
-# DrugCentral AWS Configuration Documentation
+# DrugCentral AWS Infrastructure & Deployment Guide
 
-## 1. EC2 Instance Configuration
+This document provides detailed internal documentation for the DrugCentral 2023 infrastructure on AWS.
 
-- **Service Used:** Amazon EC2 (Elastic Compute Cloud)
-- **Instance Type:** t3.medium (2 vCPU, 4 GB RAM)
-- **AMI:** Amazon Linux 2023
-- **Storage:**
-  - Root EBS volume: Extended to 20 GB to accommodate ~10 GB of Docker images and container data.
-- **Networking:**
-  - Security Group allows:
-    - SSH: Port 22
-    - HTTP: Port 80
-    - HTTPS: Port 443
-    - Application: Port 8000
-- **Elastic IP:** No Elastic IP assigned
-- **Hostname/IP:** [http://3.14.79.108:8000](http://3.14.79.108:8000)
+## 1. Environment Overview
 
-## 2. Docker and Docker Compose
+-   **Primary Domain:** [https://drugcentral.org](https://drugcentral.org)
+-   **Service:** Amazon EC2 (Elastic Compute Cloud)
+-   **Instance Type:** `t3.medium` (2 vCPU, 4 GB RAM)
+-   **Operating System:** Amazon Linux 2023 (AL2023)
+-   **Global User/Org (DockerHub):** `unmtransinfo`
 
-### Docker Installation
+## 2. Server Configuration
+
+### Docker Installation (AL2023)
+Amazon Linux 2023 uses `dnf` for package management:
 ```bash
-sudo yum update -y
-sudo amazon-linux-extras enable docker
-sudo yum install -y docker
-sudo service docker start
+sudo dnf update -y
+sudo dnf install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
 sudo usermod -aG docker ec2-user
 ```
 
-### Docker Compose v2 Plugin
+### Docker Compose
+Install the Docker Compose plugin:
 ```bash
-mkdir -p ~/.docker/cli-plugins/
-curl -SL https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
-chmod +x ~/.docker/cli-plugins/docker-compose
+sudo dnf install -y docker-compose-plugin
+```
+*Verify:* `docker compose version`
+
+## 3. Deployment Architecture
+
+The application is containerized and orchestrated via Docker Compose, using shared volumes for data persistence and synchronization.
+
+### Image Registry
+Images are hosted on DockerHub under the `unmtransinfo` organization.
+
+| Image Name | Purpose |
+| :--- | :--- |
+| `unmtransinfo/drugcen-db:latest` | PostgreSQL 14 + RDKit Cheminformatics Extension |
+| `unmtransinfo/drugcen-web:latest` | Django application backend |
+| `unmtransinfo/drugcen-nginx:latest` | Nginx reverse proxy + SSL termination |
+
+### Volume Management
+-   `pgdata`: Persistent storage for the PostgreSQL database (`/var/lib/postgresql/data`).
+-   `static_volume`: A shared named volume between `web` and `nginx` to ensure CSS/JS/Images are correctly synchronized.
+
+## 4. Operational Workflows
+
+### Standard Deployment
+Always use `compose.prod.yml` on the production server.
+
+```bash
+docker compose -f compose.prod.yml pull
+docker compose -f compose.prod.yml up -d
 ```
 
-**Verify Installation:**
+### Clearing "Caching" Issues
+If changes in the code or static assets are not showing up on the live site, force a container recreation:
 ```bash
-docker compose version
+# 1. Pull the absolute latest images
+docker compose -f compose.prod.yml pull
+
+# 2. Force container recreation and clear stale states
+docker compose -f compose.prod.yml up -d --force-recreate
+
+# 3. Clean up dangling images to free up disk space
+docker image prune -af
 ```
 
-## 3. Docker Images Used
+### SSL Management (Certbot)
+SSL is managed via Certbot. The certificates are stored in `./nginx/certbot/conf` and mounted into the Nginx container.
 
-All images are prebuilt and hosted on DockerHub under [https://hub.docker.com/u/bspanthi](https://hub.docker.com/u/bspanthi).
-
-| Image Name                | Purpose              |
-|---------------------------|----------------------|
-| bspanthi/drugcen-db       | PostgreSQL + Schema  |
-| bspanthi/drugcen-web      | Django Backend       |
-| bspanthi/drugcen-nginx    | Nginx Reverse Proxy  |
-
-**Image Pull Example:**
+To renew certificates:
 ```bash
-docker pull bspanthi/drugcen-db
-docker pull bspanthi/drugcen-web
-docker pull bspanthi/drugcen-nginx
+docker compose -f compose.prod.yml run --rm certbot renew
 ```
 
-## 4. Application Deployment (Docker Compose)
+## 5. Security & Maintenance
 
-The application is orchestrated using Docker Compose:
+### Firewall Settings (EC2 Security Group)
+-   **SSH (22)**: Management access.
+-   **HTTP (80)**: Redirected to HTTPS.
+-   **HTTPS (443)**: Primary application traffic.
+
+### Application Settings
+In production, `DEBUG` is set to `False` in `drugcen/settings.py` for security. Ensure `ALLOWED_HOSTS` includes `drugcentral.org`.
+
+## 6. CI/CD Integration
+
+### GitHub Actions
+The `.github/workflows/docker-publish.yml` workflow automatically rebuilds and pushes the `web` and `nginx` images on every push to the `main` branch.
+
+### Manual DB Updates
+The `db` image contains the compiled RDKit extension and the initial data dump (`init/drugcen.dump`). It is **NOT** built automatically in CI/CD due to its size and build time. Update it manually if the schema changes:
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+docker compose build db
+docker compose push db
 ```
-
-### Environment Variables
-- Built directly into Docker images using ENV directives.
-- `.env` file is required during runtime due to internalized configuration.
-- PostgreSQL credentials, DB names, and other secrets should be included within the `.env` before build step.
-
-## 5. Nginx and Reverse Proxy
-
-- **Container:** bspanthi/drugcen-nginx ([DockerHub link](https://hub.docker.com/u/bspanthi))
-- **Purpose:** Forwards external HTTP traffic to Django app on port 8000.
-- **Host Binding:**
-  - External Port 80 → Internal drugcen-web:8000
-- **Future work:** Enable SSL via Let's Encrypt (Certbot) when domain is routed.
-
-## 6. PostgreSQL Database
-
-- Runs as a separate container via `drugcen-db` image.
-- Uses a volume for data persistence: `/var/lib/postgresql/data`.
-- Exposed only internally within Docker network; not publicly accessible.
-
-## 7. Testing and Verification
-
-Verified via: [http://3.14.79.108:8000](http://3.14.79.108:8000)
-
-API and UI tested for:
-- Page load
-- Backend database connection
-- Basic search queries
-- Static files through Nginx
-
-## 8. Domain Transfer Plan
-
-- **Current domain:** drugcentral.org (hosted on DigitalOcean DNS, Registared under GoDaddy)
-- **Planned migration:**
-  - Update name servers at GoDaddy to point to Route 53
-  - Map A record to EC2 Public IP Address
-  - Add SSL via Certbot + Nginx(Https)
-
----
-[http://3.14.79.108:8000/](http://3.14.79.108:8000/)
