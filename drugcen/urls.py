@@ -191,7 +191,7 @@ urlpatterns = [
     url(r'^drug/' + DIGITS + r'/molfile$', structure_molfile, name='drug-molfile'),
     url(r'^drug/' + DIGITS + r'/inchi$', structure_inchi, name='drug-inchi'),
     url(r'^drug/' + DIGITS + r'/smiles$', structure_smiles, name='drug-smiles'),
-    url(r'^target/' + UPPER_WORD + r'(?:/(?:view))', TargetView.as_view(), name='target-view'),
+    url(r'^target/' + UPPER_WORD + r'(?:/(?:view))?$', TargetView.as_view(), name='target-view'),
     url(r'^label/' + SLUG + r'/view$', DetailView.as_view(
         model=models.Label,
         template_name='label_view.html',
