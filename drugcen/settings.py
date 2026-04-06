@@ -23,10 +23,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 SECRET_KEY = 'w^qmo2#*ioryra75@533^x(5#hp^3^_-)7aiwejgqu=+mzj7ie'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 INTERNAL_IPS = ('127.0.0.1',)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['drugcentral.org', 'localhost', '127.0.0.1']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
