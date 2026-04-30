@@ -221,9 +221,6 @@ urlpatterns = [
     url(r'^direct', TemplateView.as_view(
         template_name='direct.html',
     ), name='direct'),
-    url(r'^OpenAPI', TemplateView.as_view(
-        template_name='OpenAPI.html',
-    ), name='OpenAPI'),
     url(r'^LINCS', TemplateView.as_view(
         template_name='LINCSsimilarity.html',
     ), name='LINCS'),
