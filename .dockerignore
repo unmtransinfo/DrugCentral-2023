@@ -1,0 +1,12 @@
+.git
+.gitignore
+.env
+.DS_Store
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.log
+
+# Keep the database dump available for Dockerfile.db:
+# Dockerfile.db copies init/drugcen.dump into the image.
