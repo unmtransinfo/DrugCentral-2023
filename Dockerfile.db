@@ -1,15 +1,7 @@
 # Use official Postgres image as base
 FROM postgres:14.17
 
-# Accept build arguments (passed via --build-arg)
-ARG POSTGRES_DB
-ARG POSTGRES_USER
-ARG POSTGRES_PASSWORD
-
-# Set environment variables for runtime (container env)
-ENV POSTGRES_DB=${POSTGRES_DB} \
-    POSTGRES_USER=${POSTGRES_USER} \
-    POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+# Runtime Postgres environment variables are provided by compose.yml.
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -45,8 +37,12 @@ RUN cd /tmp && \
     ./bootstrap.sh && \
     ./b2 install
 
-# Build RDKit with PostgreSQL and custom options
+# Build RDKit with PostgreSQL and custom options.
+# Resolve PostgreSQL paths with pg_config instead of hardcoding an architecture-specific libpq path.
 RUN cd /tmp/rdkit && mkdir build && cd build && \
+    PG_ROOT="$(pg_config --bindir | sed 's#/bin$##')" && \
+    PG_INCLUDE_DIR="$(pg_config --includedir-server)" && \
+    PG_LIBRARY="$(pg_config --libdir)/libpq.so" && \
     cmake .. \
       -DCMAKE_BUILD_TYPE=Release \
       -DBOOST_ROOT=/usr/local \
@@ -60,26 +56,13 @@ RUN cd /tmp/rdkit && mkdir build && cd build && \
       -DRDK_BUILD_INCHI_SUPPORT=ON \
       -DRDK_BUILD_AVALON_SUPPORT=ON \
       -DRDK_BUILD_PGSQL=ON \
-      -DPostgreSQL_ROOT=/usr/lib/postgresql/14 \
-      -DPostgreSQL_INCLUDE_DIR=/usr/include/postgresql/14/server \
-      -DPostgreSQL_LIBRARY=/usr/lib/x86_64-linux-gnu/libpq.so && \
-    make -j$(nproc) && make install
+      -DPostgreSQL_ROOT="${PG_ROOT}" \
+      -DPostgreSQL_INCLUDE_DIR="${PG_INCLUDE_DIR}" \
+      -DPostgreSQL_LIBRARY="${PG_LIBRARY}" && \
+    make -j2 && make install
 
-# Add your custom pg_hba.conf
-# Copy your custom pg_hba.conf file (optional, if you have one)
-# COPY pg_hba.conf /etc/postgresql/pg_hba.conf
-
-# Copy initialization scripts and DB dump
+# Copy initialization script and database dump
 COPY init/wait-for-db.sh /docker-entrypoint-initdb.d/wait-for-db.sh
 COPY init/drugcen.dump /docker-entrypoint-initdb.d/drugcen.dump
-COPY init/pg_hba.conf /etc/postgresql/pg_hba.conf
-
-# Fix permissions on dump file
-RUN chmod 644 /docker-entrypoint-initdb.d/drugcen.dump && \
-    chown postgres:postgres /docker-entrypoint-initdb.d/drugcen.dump
-
-# Copy override script that runs at container init
-RUN echo '#!/bin/bash\n\
-cp /etc/postgresql/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf\n' \
-> /docker-entrypoint-initdb.d/001-copy-pg_hba.sh && \
-chmod +x /docker-entrypoint-initdb.d/001-copy-pg_hba.sh
+RUN chmod +x /docker-entrypoint-initdb.d/wait-for-db.sh && \
+    chmod 644 /docker-entrypoint-initdb.d/drugcen.dump
